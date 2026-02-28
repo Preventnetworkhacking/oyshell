@@ -1,102 +1,167 @@
-# Raven-Storm Toolkit
+# 🐚 OyShell
 
-<img src="https://img.shields.io/badge/Python-3.8-blue"> <img src="https://img.shields.io/badge/Status-Beta-orange"> <img src="https://img.shields.io/badge/Version-4-red"> <img src="https://img.shields.io/badge/Licence-MIT-yellowgreen"> <a href="https://taguar258.github.io/Raven-Storm/INSTALLATION"><img src="https://img.shields.io/badge/Download-Now-green"></a>
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/License-MIT-green">
+  <img src="https://img.shields.io/badge/Oystra-Security%20Research-purple">
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen">
+</p>
 
-**Raven-Storm is a powerful DDoS toolkit for penetration tests, including attacks for several protocols written in python(3.8).**
+<p align="center">
+  <b>Network Security Research Toolkit</b><br>
+  <i>An Oystra security research project</i>
+</p>
 
-Takedown WiFi access points, devices in your network, servers, services, and Bluetooth devices with ease.
+---
 
-Raven(abbreviation) is desinged to help you to **test, understand, and learn from stress-testing** attacks.
+## ⚠️ Legal Disclaimer
 
-Raven can **deal with strong servers** and **can be optimized** for non typical targets.
+**OyShell is designed for authorized security testing and research ONLY.**
 
-Raven will fit your purpose, even if it is **jamming down wifi networks or bluetooth devices**.
+By using this software, you agree that:
+- You have **explicit written permission** to test the target systems
+- You will **not use this tool for malicious purposes**
+- You understand that unauthorized network attacks are **illegal** under laws like the CFAA
+- You accept **full responsibility** for your actions
 
-_I archived this repository because I currently do not want to work on it._
+> **Responsible Disclosure:** If you discover vulnerabilities using OyShell, please report them responsibly to the affected parties.
 
-![MOSHED](https://user-images.githubusercontent.com/36562445/90558504-77d7ca80-e19c-11ea-9dd5-6ba902934866.gif)
+---
 
-## What makes it different
+## 🎯 Purpose
 
-- [x] Raven-Storm includes tools for creating shorcuts and working more efficiently.
-- [x] Raven is **Effective** and **powerful** in shutting down hosts and servers.
-- [x] **Testing** and understanding are the goals of Raven-Storm.
-- [x] Raven lets you connects clients together to create a botnet.
-- [x] Features different protocols such as UDP/TCP, ICMP, HTTP, L2CAP, ARP and IEEE.
+OyShell is a network stress-testing and security research toolkit. It helps security professionals:
 
-## Installation
+- **Test resilience** of networks and services against DoS conditions
+- **Understand** how various network protocols behave under load
+- **Identify** potential weaknesses in defensive configurations
+- **Train** defensive teams (blue teams) with realistic scenarios
 
-Just enter the following line to install Raven-Storm on Linux.
+---
+
+## 🔧 Features
+
+| Module | Protocol | Use Case |
+|--------|----------|----------|
+| `l3` | ICMP | Ping flood testing |
+| `l4` | TCP/UDP | Transport layer stress tests |
+| `l7` | HTTP | Application layer testing |
+| `wifi` | IEEE 802.11 | Wireless deauth testing |
+| `bl` | L2CAP | Bluetooth device testing |
+| `arp` | ARP | ARP spoofing detection |
+| `scanner` | TCP/ICMP | Network reconnaissance |
+
+---
+
+## 📦 Installation
+
+### Quick Install (Linux)
 
 ```bash
-curl -s https://raw.githubusercontent.com/Taguar258/Raven-Storm/master/install.sh | sudo bash -s
+git clone https://github.com/Preventnetworkhacking/oyshell.git
+cd oyshell
+pip install -r requirements.txt
+python main.py
 ```
 
-<a style="color: grey" href="https://taguar258.github.io/Raven-Storm/INSTALLATION"><b>Click here for the more detailed installation guide.</b></a>
+### Docker (Recommended)
 
+```bash
+docker build -t oyshell .
+docker run -it --net=host oyshell
+```
 
-<a style="color: grey" href="https://github.com/Taguar258/Raven-Storm/blob/master/README.md#info-and-warning"><b>Terms of Use</b></a>
+### System-Wide Install
 
-<a style="color: grey" href="https://github.com/Taguar258/Raven-Storm/blob/master/LICENSE">Licence</a>
+```bash
+sudo ./install.sh
+oyshell  # Run from anywhere
+```
 
-<a style="color: grey" href="https://github.com/Taguar258/Raven-Storm/projects/1">Project status/ToDo</a>
+---
 
-<a style="color: grey" href="https://github.com/Taguar258/CLIF/">CLIF Framework</a>
+## 🚀 Quick Start
 
-## What module to use
+```bash
+# Start OyShell
+python main.py
 
-| Method | Module  |
-| ------- | --- |
-| ping | l3 |
-| udp/tcp services | l4 |
-| websites | l7 |
-| local devices | arp |
-| bluetooth | bl |
-| wifi | wifi |
-| botnet | server |
+# Inside OyShell:
+OyShell> l4          # Load Layer 4 module
+OyShell/l4> help     # Show available commands
+OyShell/l4> ip <target>
+OyShell/l4> port 80
+OyShell/l4> threads 10
+OyShell/l4> run
+```
 
-_Try using the L4 attack if L7 fails._
+---
 
-<!--![Screenshot_20190405_181220](https://user-images.githubusercontent.com/36562445/55641522-60c65180-57ce-11e9-8c65-084edc2bfb45.jpg)-->
-![Preview1](https://user-images.githubusercontent.com/36562445/98484349-152c2300-220f-11eb-84a0-1c3c57415d64.png)
+## 📋 Requirements
 
-![Preview2](https://user-images.githubusercontent.com/36562445/98694260-8552ba00-2371-11eb-9e20-fd5432c90849.png)
-<!--![Screenshot_20190405_181220](https://user-images.githubusercontent.com/36562445/63696325-bdc4b180-c81a-11e9-89b8-a7ce24df08ca.png)-->
+- Python 3.10+
+- Linux (recommended) or macOS
+- Root/sudo for certain modules (wifi, arp)
 
-## Example
+### Dependencies
 
-![Gif](https://user-images.githubusercontent.com/36562445/98694347-a0252e80-2371-11eb-95ec-925e8c98948f.gif)
-<!--![render1581110570685](https://user-images.githubusercontent.com/36562445/74067207-f9ce8600-49f8-11ea-9d54-97a056169cf7.gif)-->
+```
+urllib3>=2.0.0
+python-nmap>=0.7.1
+Flask>=3.0.0
+requests>=2.31.0
+scapy>=2.5.0
+```
 
-## How to run a DDoS attack
+---
 
-_You probably already know the difference between DoS and DDoS:_
-_A DoS Attack is run by a single Maschine and a DDoS Attack by multiple._
+## 🏗️ Project Structure
 
-_But how do we perform a DDoS Attack using Raven-Storm?_
+```
+oyshell/
+├── main.py              # Entry point
+├── oyshell_core/        # Core modules
+│   ├── main.py
+│   ├── CLIF_Framework/  # CLI framework
+│   └── modules/
+│       ├── l3/          # ICMP module
+│       ├── l4/          # TCP/UDP module
+│       ├── l7/          # HTTP module
+│       ├── wifi/        # Wireless module
+│       ├── bl/          # Bluetooth module
+│       ├── arp/         # ARP module
+│       ├── scanner/     # Network scanner
+│       └── server/      # Distributed server
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
 
+---
 
-To connect multiple instances of Raven-Storm, you will then need to open a host.
-Just execute the command `server` and define a custom password to prevent others from interfering.
-When run, you will receive a URL that you can connect to when executing the `ddos` command.
+## 🤝 Contributing
 
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
 
-## Info and Warning
+Please ensure all contributions maintain the tool's ethical focus on security research.
 
-__THE CREATOR (Taguar258) OF THE RAVEN-STORM TOOLKIT DOES NOT TAKE ANY RESPONSIBILITY FOR DAMAGE CAUSED. THE USER ALONE IS RESPONSIBLE, BE IT: ABUSING RAVEN-STORM TO FIT ILLEGAL PURPOSES OR ACCIDENTAL DAMAGE CAUSED BY RAVEN-STORM.
-THE CREATOR DID NOT INTEND RAVEN-STORM AS A TOOL FOR ILLEGAL PURPOSES AND THEREFORE DOES NOT SUPPORT ANY ILLEGAL ABUSE OF THIS TOOL.
-BY USING THIS SOFTWARE, YOU MUST AGREE TO TAKE FULL RESPONSIBILITY FOR DAMAGE CAUSED BY RAVEN-STORM IN ANY WAY ON YOUR OWN.
-THE CREATOR DOES NOT WANT PEOPLE TO USE RAVEN-STORM IF THEY DO NOT HAVE EXPERIENCE WITH THE ATTACKS INCLUDED.
-EVERY ATTACK WILL CAUSE TEMPORARY DAMAGE, BUT LONG-TERM DAMAGE IS DEFFINITIFLY POSSIBLE.
-RAVEN-STORM SHOULD NOT SUGGEST PEOPLE TO PERFORM ILLEGAL ACTIVITIES.__
+---
 
-__THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.__
+## 📜 License
 
-**MIT Taguar258 2020**
+MIT License - see [LICENSE](LICENSE)
 
+---
+
+## 🔗 Links
+
+- **Oystra:** [oystra.ai](https://oystra.ai)
+- **Original Project:** Based on [Raven-Storm](https://github.com/Taguar258/Raven-Storm) by Taguar258
+
+---
+
+<p align="center">
+  <b>🛡️ Built for defense, not offense 🛡️</b>
+</p>

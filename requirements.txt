@@ -1,4 +1,6 @@
-urllib3==1.25.10
-python_nmap==0.6.1
-Flask==1.1.2
-requests==2.24.0
+# OyShell Dependencies
+urllib3>=2.0.0
+python-nmap>=0.7.1
+Flask>=3.0.0
+requests>=2.31.0
+scapy>=2.5.0
